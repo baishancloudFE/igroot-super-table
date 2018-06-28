@@ -1,7 +1,7 @@
 {
   "name": "igroot-super-table",
-  "version": "0.0.6",
-  "description": "",
+  "version": "0.0.7",
+  "description": "超级表格",
   "main": "index.js",
   "keywords": [
     "igroot"
