@@ -53,7 +53,7 @@ export default class IgrootSuperTable extends Component {
     columnsFilterable: false,
     onRowUpdate: () => {},
     onChange:  () => {},
-    onRowSelected: () => {}
+    onRowSelected: null
   }
 
   constructor(props) {
@@ -129,6 +129,7 @@ export default class IgrootSuperTable extends Component {
       })
       
       dataSource.map((item, index) => item['_id_']=index)
+
       this.setState({
         rows: dataSource,
         dataSource
@@ -146,11 +147,7 @@ export default class IgrootSuperTable extends Component {
   }
 
   getDataSource = () => {
-    if (this.activeEditor) {
-      return this.state.dataSource
-    } else {
-      return Selectors.getRows(this.state)
-    }
+    return Selectors.getRows(this.state)
   } 
 
   setEditorComponentByType = (editor) => {
@@ -163,21 +160,25 @@ export default class IgrootSuperTable extends Component {
 
   handleGridRowsUpdated = ({ fromRow, toRow, updated }) => {
     const { onRowUpdate, onChange } = this.props 
-    const data = this.state.dataSource
-    const dataSource = data.filter(item => item._id_!==undefined) 
-    let rows = dataSource.slice()
+    const originRows = this.getDataSource()
+
+    let rows = originRows.slice()
     let updatedRow = null
 
     for (let i = fromRow; i <= toRow; i++) {
       let rowToUpdate = rows[i]
       updatedRow = update(rowToUpdate, {$merge: updated})
-      rows[i] = updatedRow      
+      rows[i] = updatedRow 
     }
+
+    rows = rows.filter(item => item._id_!==undefined)
 
     onRowUpdate && onRowUpdate(updated, updatedRow)
     onChange && onChange(rows)
 
+
     this.setState({ 
+      rows,
       dataSource: rows
     })
   }
@@ -210,9 +211,6 @@ export default class IgrootSuperTable extends Component {
     })
   }
 
-  handleFilter = () => {
-    console.log('xxx')
-  }
 
   handleClearFilters = () => {
     this.setState({
@@ -278,9 +276,10 @@ export default class IgrootSuperTable extends Component {
   }
 
   rowGetter = (i) => {
-    const  dataSource = this.getDataSource()
+    const { dataSource } = this.state 
+    const  dataSource1 = this.getDataSource()
 
-    return dataSource[i]
+    return dataSource1[i]
   }
 
   emptyEmptyView = () => {
@@ -370,7 +369,6 @@ export default class IgrootSuperTable extends Component {
               minHeight={isEmpty ? 0 : minHeight}
               onCheckCellIsEditable={this.handleCheckCellIsEditable}
               onAddFilter = {this.handleFilterAdd}
-              onFilter={this.handleFilter}
               onClearFilters = {this.handleClearFilters}
               onRowExpandToggle={this.handleRowExpandToggle}
               onGridRowsUpdated={this.handleGridRowsUpdated}

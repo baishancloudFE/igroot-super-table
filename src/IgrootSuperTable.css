@@ -1,5 +1,7 @@
 .igroot-super-table {
-  width: 100%;
+  box-sizing: border-box;
+  border: none;
+  margin: 0;
 }
 
 #demo {

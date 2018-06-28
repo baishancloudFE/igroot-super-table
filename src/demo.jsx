@@ -201,7 +201,7 @@ export default class App extends Component {
     return (
       <SuperTable 
         menus={this.menus}
-        // group={[{key: 'sex', name:'性别'}, {key: 'priority', name:'优先级'}]}
+        group={[{key: 'sex', name:'性别'}, {key: 'priority', name:'优先级'}]}
         minHeight={1000}
         selectedRows={[0,1,3]}
         columnsFilterable={true}
