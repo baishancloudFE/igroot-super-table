@@ -82,6 +82,8 @@ export default class IgrootSuperTable extends Component {
         this.enableCellSelect = true
       } 
 
+      item['dataIndex'] = item['key']
+
       if(item['editor'] && item['editor']['type']) {
         item['editor'] = this.setEditorComponentByType(item['editor'])
       }
@@ -132,9 +134,8 @@ export default class IgrootSuperTable extends Component {
 
       this.setState({
         rows: dataSource,
-        dataSource
-      }, () => {
-        this.dataChange()
+        dataSource,
+        groupBy: nextProps['group'] || []
       })
     }
   }
@@ -341,7 +342,7 @@ export default class IgrootSuperTable extends Component {
       )
     }
 
-    if (this.columnsFilterable || groupBy.length) {
+    if (this.columnsFilterable || (enableGroup &&groupBy.length)) {
       extraProps['toolbar'] = (
         <Toolbar enableFilter={this.columnsFilterable} filterRowsButtonText="快速过滤">
         {

@@ -5,7 +5,7 @@ import SuperTable from './IgrootSuperTable'
 export default class App extends Component {
   constructor(props, context) {
     super(props, context)
-    const rows = this.createRows(10)
+    const rows = this.createRows(100000)
 
     this.state = { rows, originalRows: rows }
   }
@@ -23,7 +23,7 @@ export default class App extends Component {
       key: 'sex',
       title: '性别',
       headerRenderer: () => {
-        return <span color='red'>性别</span>
+        return <span color='red'>性别22</span>
       }
     },
     {
@@ -201,7 +201,7 @@ export default class App extends Component {
     return (
       <SuperTable 
         menus={this.menus}
-        group={[{key: 'sex', name:'性别'}, {key: 'priority', name:'优先级'}]}
+        group={[{key: 'sex', name:'性别'}]}
         minHeight={1000}
         selectedRows={[0,1,3]}
         columnsFilterable={true}
