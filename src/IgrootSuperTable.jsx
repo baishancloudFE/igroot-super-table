@@ -122,7 +122,7 @@ export default class IgrootSuperTable extends Component {
 
   componentWillReceiveProps(nextProps) {
     if ('dataSource' in nextProps) {
-      const { dataSource } = nextProps
+      const { dataSource, selectedRows } = nextProps
       this.columns.map(item => {
         if (item['render']) {
           const FormatterWrapper = formatterWrapper(item['render'], dataSource)
@@ -135,6 +135,7 @@ export default class IgrootSuperTable extends Component {
       this.setState({
         rows: dataSource,
         dataSource,
+        selectedRows,
         groupBy: nextProps['group'] || []
       })
     }
@@ -152,10 +153,10 @@ export default class IgrootSuperTable extends Component {
   } 
 
   setEditorComponentByType = (editor) => {
-    const { type, options } = editor
+    const { type, options, value } = editor
 
-    if (type === 'select') return <DropDownEditor options={formatSelectOptions(options)}/>
-    if (type === 'autoComplete') return <AutoCompleteEditor options={formatAutoCompleteOptions(options)} />
+    if (type === 'select') return <DropDownEditor options={formatSelectOptions(options)} value={value} />
+    if (type === 'autoComplete') return <AutoCompleteEditor options={formatAutoCompleteOptions(options)} value={value} />
     // if (type === 'checkbox') return <CheckBoxEditor options={options} />
   }
 
@@ -211,7 +212,6 @@ export default class IgrootSuperTable extends Component {
         filters: newFilters
     })
   }
-
 
   handleClearFilters = () => {
     this.setState({
@@ -320,13 +320,14 @@ export default class IgrootSuperTable extends Component {
   render() {
     const  dataSource = this.getDataSource() 
     const { selectedRows, groupBy } = this.state 
-    const { className, style, minHeight, onRowSelected, menus, enableGroup } = this.props 
+    const { className, style, minHeight, onRowSelected, menus, enableGroup, showRowCheckbox } = this.props 
     const isEmpty = !dataSource.length
     const extraProps = {}
 
     if (onRowSelected) {
+      console.log(selectedRows)
       extraProps['rowSelection'] = {
-        showCheckbox: true,
+        showCheckbox: showRowCheckbox === undefined ? true : showRowCheckbox,
         enableShiftSelect: true,
         onRowsSelected: this.handleRowsSelected,
         onRowsDeselected: this.handleRowsDeselected,

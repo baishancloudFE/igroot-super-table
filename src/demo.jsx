@@ -5,7 +5,7 @@ import SuperTable from './IgrootSuperTable'
 export default class App extends Component {
   constructor(props, context) {
     super(props, context)
-    const rows = this.createRows(10)
+    const rows = this.createRows(10000)
 
     this.state = { rows, originalRows: rows }
   }
@@ -237,7 +237,7 @@ export default class App extends Component {
     return (
       <SuperTable 
         menus={this.menus}
-        group={this.group}
+        //group={this.group}
         minHeight={1000}
         selectedRows={[0,1,3]}
         columnsFilterable={true}
