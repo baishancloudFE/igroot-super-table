@@ -295,12 +295,15 @@ export default class IgrootSuperTable extends Component {
   }
 
   rowGroupRenderer = (data) => {
+    const  dataSource = this.getDataSource() 
+    const { onRowGroupRender } = this.props 
     const { groupBy } = this.state 
     const { columnGroupName, columns, name, isExpanded, treeDepth } = data 
     const groupName = groupBy.find(item => item.key === columnGroupName)['name']
     const shouldExpand = !isExpanded
     const params = { columnGroupName, name, shouldExpand }
     const iconCls = shouldExpand ? 'icon-up' : 'icon-down'
+    const title = `${groupName}：${name}`
 
     return (
       <div 
@@ -309,7 +312,7 @@ export default class IgrootSuperTable extends Component {
         style={{paddingLeft: treeDepth*20 + 10}}
       >
       <span className={`iconfont ${iconCls}`} />
-      {`${groupName}：${name}`}
+      { (onRowGroupRender && onRowGroupRender(data, dataSource, title)) || title}
       </div>
     )
   }
@@ -338,7 +341,7 @@ export default class IgrootSuperTable extends Component {
 
     if (menus.length) {
       extraProps['contextMenu'] = (
-        <IgrootSuperTableMenu options={menus} id={menuId} />
+        <IgrootSuperTableMenu options={menus} id={menuId} dataSource={dataSource} />
       )
     }
 

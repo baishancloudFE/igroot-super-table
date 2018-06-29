@@ -5,7 +5,7 @@ import SuperTable from './IgrootSuperTable'
 export default class App extends Component {
   constructor(props, context) {
     super(props, context)
-    const rows = this.createRows(100000)
+    const rows = this.createRows(10)
 
     this.state = { rows, originalRows: rows }
   }
@@ -132,6 +132,17 @@ export default class App extends Component {
     }
   ]
 
+  group = [
+    {
+      key: 'sex', 
+      name:'性别'
+    }, 
+    {
+      key:'priority', 
+      name: '优先级'
+    }
+  ]
+
   insertRow = (rowIdx) => {
     const newRow = {
       id: 0,
@@ -197,11 +208,36 @@ export default class App extends Component {
     console.log(data, 'change')
   }
 
+  handleRowGroupRender = (row, data, title) => {
+    this.splitGroup(data, row.idx)
+    return <span>{title} hello </span>
+  }
+
+  splitGroup = (data, idx) => {
+    const tree = []
+    data.map((item, index) => {
+      if (item['__metaData'] ) {
+        tree[index] = item['__metaData']['treeDepth']
+      }
+    })
+
+    const subItems = []
+    for(let i=idx+1; i<data.length; i++) {
+      if (!data[i]['__metaData']) {
+        subItems.push(data[i])
+      } 
+
+      if(data[i]['__metaData'] && tree[i] == tree[idx]) break
+    }
+
+    return subItems
+  }
+
   render() {
     return (
       <SuperTable 
         menus={this.menus}
-        group={[{key: 'sex', name:'性别'}]}
+        group={this.group}
         minHeight={1000}
         selectedRows={[0,1,3]}
         columnsFilterable={true}
@@ -209,6 +245,7 @@ export default class App extends Component {
         onGridSort={this.handleGridSort}
         onRowUpdate={this.handleRowUpdate}
         onRowSelected={this.handleRowSelected}
+        onRowGroupRender={this.handleRowGroupRender}
         columns={this.columns}
         dataSource={this.state.rows}
       />

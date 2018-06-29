@@ -10,7 +10,10 @@ const contextId = `igroot-supertable-menu-${new Date().getTime()}`
 
 export class IgrootSuperTableMenu extends React.Component {
   render() {
-    const { idx, rowIdx, options, id } = this.props
+    const { idx, rowIdx, options, id, dataSource } = this.props
+    const row = dataSource[rowIdx]
+    const _id_ = row && row['_id_']
+    
     const MenuItems =[] 
     
     options.map((item, index) => {
@@ -18,13 +21,13 @@ export class IgrootSuperTableMenu extends React.Component {
         MenuItems.push(
           <SubMenu title={item.title} key={index}>
           {item['children'].map((subItem, i) => (
-            <MenuItem data={{ rowIdx, idx }} onClick={subItem.callback} key={i}>{subItem.title}</MenuItem>
+            <MenuItem  data={{ row, _id_ }}  onClick={subItem.callback} key={i}>{subItem.title}</MenuItem>
           ))
           }
           </SubMenu>
         )
       } else {
-        MenuItems.push(<MenuItem data={{ rowIdx, idx }} onClick={item.callback} key={index}>{item.title}</MenuItem>)
+        MenuItems.push(<MenuItem data={{ row, _id_ }} onClick={item.callback} key={index}>{item.title}</MenuItem>)
       }
     })
     
